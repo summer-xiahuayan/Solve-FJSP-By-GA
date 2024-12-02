@@ -4,7 +4,7 @@ from Decode import Decode
 from Encode import Encode
 import itertools
 import matplotlib.pyplot as plt
-import tqdm
+from tqdm import trange, tqdm
 class GA:
     def __init__(self):
         self.Pop_size=200       #种群数量
@@ -154,7 +154,7 @@ class GA:
         x = np.linspace(0, 100, 1)
         x1=[x1 for x1 in range(self.Pop_size)]
         Best_fit=[]
-        for i in range(self.Max_Itertions):
+        for i in tqdm(range(self.Max_Itertions)):
             Fit = self.fitness(C, J, Processing_time, M_num, Len_Chromo)
             # plt.plot(x1,Fit[0],'-k')
             # plt.plot(x1, Fit[1], linestyle='-.',c="black")
@@ -184,7 +184,7 @@ class GA:
             else:
                 Best_fit.append(Optimal_fit)
             Select = self.Select(min(Fit))
-            print(len(Select))
+            #print(len(Select))
             C=[C[Select_i] for Select_i in Select]
             for j in range(len(C)):
                 offspring = []
@@ -212,9 +212,9 @@ class GA:
                     C+=offspring
         plt.plot([x for x in range(len(Best_fit))], Best_fit,'-k')
         plt.title(
-            'the maximum completion time of each iteration for flexible job shop scheduling problem')
-        plt.ylabel('Cmax')
-        plt.xlabel('Test Num')
+            'flexible job shop scheduling problem')
+        plt.ylabel('Time')
+        plt.xlabel('Epoch')
         plt.show()
 
 if __name__=='__main__':

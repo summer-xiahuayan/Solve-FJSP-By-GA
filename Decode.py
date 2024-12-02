@@ -129,6 +129,7 @@ class Decode:
         return self.fitness
 
     def Gantt(self,Machines):
+        fig=plt.figure(figsize=(15, 8))
         M = ['red', 'blue', 'yellow', 'orange', 'green', 'palegoldenrod', 'purple', 'pink', 'Thistle', 'Magenta',
              'SlateBlue', 'RoyalBlue', 'Cyan', 'Aqua', 'floralwhite', 'ghostwhite', 'goldenrod', 'mediumslateblue',
              'navajowhite',
@@ -143,7 +144,7 @@ class Decode:
                 # plt.text(x=Start_time[i_1]+0.1,y=i,s=Machine.assigned_task[i_1])
                 plt.barh(i, width=End_time[i_1] - Start_time[i_1], height=0.8, left=Start_time[i_1], \
                          color=M[int(Machine.assigned_task[i_1][0])%len(M)], edgecolor='black')
-                plt.text(x=Start_time[i_1] + (End_time[i_1] - Start_time[i_1])/2-0.5, y=i, s=Machine.assigned_task[i_1][0])
+                plt.text(x=Start_time[i_1] + (End_time[i_1] - Start_time[i_1])/2-0.3, y=i, s='J'+str(Machine.assigned_task[i_1][0]))
         plt.yticks(np.arange(i + 1), np.arange(1, i + 2))
         plt.title('Scheduling Gantt chart')
         plt.ylabel('Machines')
