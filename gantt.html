@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flow Shop Scheduling Gantt Chart</title>
+    <link rel="stylesheet" href="dhtmlxgantt.css" type="text/css">
+    <script src="dhtmlxgantt.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #gantt_here {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    
+	
+<div id="gantt_here" style="width: 100%;"></div>
+
+
+<script>
+
+    var ganttData = [[[4, 0, 1, 1], [5, 3, 4, 2], [7, 4, 7, 2], [8, 7, 8, 3], [6, 8, 10, 2], [2, 10, 12, 3], [1, 12, 17, 1], [9, 17, 19, 4], [3, 23, 24, 3], [5, 24, 29, 4], [1, 29, 30, 4], [6, 30, 31, 5], [10, 41, 44, 6]], [[2, 0, 6, 1], [3, 6, 12, 1], [8, 12, 18, 4], [5, 18, 24, 3], [6, 24, 30, 4], [4, 30, 36, 2], [9, 36, 42, 6]], [[8, 2, 6, 2], [2, 6, 7, 2], [6, 10, 14, 3], [7, 14, 15, 5], [10, 15, 19, 2], [3, 19, 23, 2], [3, 24, 28, 4], [9, 28, 32, 5], [1, 32, 33, 5], [4, 36, 37, 3]], [[9, 9, 12, 3], [2, 12, 18, 4], [8, 18, 24, 5], [5, 29, 35, 5], [10, 35, 41, 5], [1, 41, 44, 6], [6, 44, 46, 6]], [[5, 0, 3, 1], [9, 4, 9, 2], [7, 13, 14, 4], [10, 19, 22, 3], [1, 22, 25, 2], [3, 28, 33, 5], [4, 37, 40, 4]], [[8, 0, 2, 1], [7, 2, 3, 1], [9, 3, 4, 1], [6, 4, 6, 1], [7, 7, 13, 3], [10, 13, 15, 1], [2, 18, 23, 5], [10, 23, 24, 4], [1, 25, 27, 3], [5, 35, 41, 6], [4, 41, 43, 5]]];
+
+
+
+    var colors = ["#15b01a", "#0343df", "#e50000", "#f97306", "#653700", "#929591", "#00ffff", "#6e750e",
+
+                  "#a03623", "#fac205", "#bf9005", "#029386", "#214761", "#ffd1df", "#e6daa6"];
+
+
+
+    gantt.init("gantt_here");
+
+    gantt.parse({
+
+        data: (function() {
+
+            var tasks = [];
+
+            var taskIndex = 1;
+			
+			for (var m = 0; m < ganttData.length; m++) { // Iterate over machines
+				var end_job = ganttData[m][ganttData[m].length-1];
+					var star_job=ganttData[m][0];
+					var dur_time=end_job[2]-star_job[1]
+					var m_index=m+1
+					
+				var startDate = new Date(); // 获取当前日期和时间
+				//var startDate = new Date();
+
+				var startDays = star_job[1]; // 假设 job[1] 是要添加的天数
+				function addDays(startDate, days) {
+
+    var result = new Date(startDate);
+
+    result.setDate(result.getDate() + days);
+	console.log(result)
+
+    return result;
+
+}
+
+				var newStartDate = addDays(startDate, startDays);
+
+
+
+				// 将 Date 对象转换为 ISO 格式字符串（YYYY-MM-DD）
+
+				//var isoStartDate = startDate.toISOString().split('T')[0];
+
+
+
+				//console.log(isoStartDate); // 输出格式为 "YYYY-MM-DD" 的字符串
+					
+                    
+                    tasks.push({
+
+                        id: m+1,
+
+                        text: "M" +m_index,
+
+                        start_date:newStartDate,//job[1],
+
+                        duration: dur_time, // Convert days to seconds
+
+                        parent: 0,
+
+                        progress: 0.0,
+
+                        open: true,
+
+                        color: '#666'// Job color
+
+                    });
+					taskIndex++
+            } 
+			
+			
+
+
+
+            for (var m = 0; m < ganttData.length; m++) { // Iterate over machines
+
+                for (var j = 0; j < ganttData[m].length; j++) { // Iterate over jobs
+
+                    var job = ganttData[m][j];
+				
+                    // 假设 startDate 是一个 Date 对象，days 是要添加的天数
+
+function addDays(startDate, days) {
+
+    var result = new Date(startDate);
+
+    result.setDate(result.getDate() + days);
+	console.log(result)
+
+    return result;
+
+}
+
+
+
+// 使用示例
+
+var startDate = new Date();
+
+var jobDays = job[1]; // 假设 job[1] 是要添加的天数
+
+var newStartDate = addDays(startDate, jobDays);
+
+
+
+// 然后将 newStartDate 用作任务的开始日期
+var op="|T"+job[3]
+
+tasks.push({
+
+    id: taskIndex++,
+
+    text: "J" + job[0]+op,
+
+    start_date: newStartDate,
+
+    duration: job[2] - job[1],
+
+    parent: m + 1,
+
+    progress: 0.0,
+
+    open: true,
+
+    color: colors[(job[0] - 1) % colors.length]
+
+});
+
+                }
+
+            }
+
+            return tasks;
+
+        })(),
+
+        links: []
+
+    });
+
+
+
+    // Set date format
+	//gantt.config.start_date = this.nowDate.format('YYYY-MM-DD')
+	//gantt.config.end_date = this.newDate.format('YYYY-MM-DD')
+
+//    gantt.config.date_format = "%Y-%m-%d %H:%i:%s"; // Include seconds in date format
+	gantt.resize();
+
+    gantt.config.duration_unit = "day"; // Set duration unit to seconds
+
+    gantt.config.scale_height = 30; // Set scale height for each machine
+
+    gantt.config.row_height = 30; // Set row height for each task
+
+    gantt.config.min_column_width = 50; // Minimum width for the columns
+
+	gantt.config.readonly = true;
+
+    // Adjust the view
+
+    gantt.attachEvent("onGanttReady", function() {
+
+        gantt.showDate(gantt.date.add(gantt.date.min, gantt.date.day, 1));
+
+        gantt.showDate(gantt.date.add(gantt.date.max, gantt.date.day, 10));
+
+    });
+
+</script>
+
+</body>
+</html>

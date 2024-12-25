@@ -1,3 +1,5 @@
+import copy
+
 import matplotlib.pyplot as plt
 from Jobs import Job
 from Machines import Machine_Time_window
@@ -144,12 +146,58 @@ class Decode:
                 # plt.text(x=Start_time[i_1]+0.1,y=i,s=Machine.assigned_task[i_1])
                 plt.barh(i, width=End_time[i_1] - Start_time[i_1], height=0.8, left=Start_time[i_1], \
                          color=M[int(Machine.assigned_task[i_1][0])%len(M)], edgecolor='black')
-                plt.text(x=Start_time[i_1] + (End_time[i_1] - Start_time[i_1])/2-0.3, y=i, s='J'+str(Machine.assigned_task[i_1][0]))
+                plt.text(x=Start_time[i_1] +0.3, y=i, s='J'+str(Machine.assigned_task[i_1][0])+'|T'+str(Machine.assigned_task[i_1][1]))
         plt.yticks(np.arange(i + 1), np.arange(1, i + 2))
         plt.title('Scheduling Gantt chart')
         plt.ylabel('Machines')
         plt.xlabel('Time(s)')
         plt.show()
+
+
+    def Gantt_html(self,Machines):
+        meachines_tasks=[]
+        for i in range(len(Machines)):
+            tasks=[]
+            Machine=Machines[i]
+            Start_time=Machine.O_start
+            End_time=Machine.O_end
+
+            for i_1 in range(len(End_time)):
+                task=[]
+                task.append(Machine.assigned_task[i_1][0])
+                task.append(Start_time[i_1])
+                task.append(End_time[i_1])
+                task.append(Machine.assigned_task[i_1][1])
+                tasks.append(copy.copy(task))
+            meachines_tasks.append(tasks)
+        #print(meachines_tasks)
+
+        import re
+        # 读取原始HTML文件
+        with open('gantt.html', 'r', encoding='utf-8') as file:
+            content = file.read()
+        # 新的ganttData值，这里只是一个示例，你需要替换成你想要设置的值
+        new_gantt_data = str(meachines_tasks)[0:-1]
+        # 使用正则表达式替换var ganttData的值
+
+        # 这个正则表达式匹配 var ganttData = 开头，直到后面的 JavaScript 代码块结束
+
+        # 它假设 ganttData 的值是多行的，并且可能包含引号和换行符
+
+        new_content = re.sub(r'(var ganttData =\s*).*?(\];)', r'\1' + new_gantt_data + r'\2', content, flags=re.DOTALL)
+
+
+
+        # 将修改后的内容写回原HTML文件
+
+        with open('gantt.html', 'w', encoding='utf-8') as file:
+
+            file.write(new_content)
+
+
+
+
+
 
 if __name__=='__main__':
     from Encode import Encode

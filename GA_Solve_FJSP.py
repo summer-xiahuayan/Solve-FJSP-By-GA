@@ -181,6 +181,7 @@ class GA:
                 else:
                     d.Decode_2(Optimal_CHS, Len_Chromo)
                 d.Gantt(d.Machines)
+                d.Gantt_html(d.Machines)
             else:
                 Best_fit.append(Optimal_fit)
             Select = self.Select(min(Fit))
