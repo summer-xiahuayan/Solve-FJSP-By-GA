@@ -144,7 +144,7 @@ Decoding can be done based on machines and jobs, selecting the strategy with the
 
 
 
-
+![Flow Shop Scheduling Gantt Chart - Google Chrome 2024-12-25 14-12-00](./README.assets/1.gif)
 
 # 遗传算法求解柔性作业车间调度问题FJSP
 
